@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import { createUser, getAllUsers, getOneUser, removeUser } from './handlers/users';
-import { userType } from '../type';
+import { createUser, getAllUsers, getOneUser, removeUser, updateUser } from './handlers/users';
+import { userType, userUpdateType } from '../type';
 import { logger } from 'hono/logger';
 
 const app = new Hono();
@@ -22,9 +22,15 @@ app.get('/user/:id', async (c) => {
 
 app.post('/user', async (c) => {
   const post = await c.req.json<userType>();
-  console.log(post);
   const user = await createUser(post);
   return c.json({ user });
+});
+
+app.patch('/user/:id', async (c) => {
+  const post = await c.req.json<userUpdateType>();
+  const id = c.req.param('id');
+  const updatedUser = await updateUser(post, id);
+  return c.json({ user: updatedUser });
 });
 
 app.delete('/user/:id', async (c) => {
