@@ -1,0 +1,6 @@
+# dev files
+.vscode
+node_modules
+
+# env variables
+.env
