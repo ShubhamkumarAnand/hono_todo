@@ -17,23 +17,26 @@ export async function getOneUser(id: string) {
 
 export async function createUser(body: userType) {
   const hashPassword = await Bun.password.hash(body.password);
-  const createUser = await db.insert(users).values({
-    email: body.email,
-    username: body.username,
-    firstName: body.first_name,
-    lastName: body.last_name,
-    password: hashPassword,
-    imageUrl: body.image_url,
-  }).returning({ email: users.email });
+  const createUser = await db
+    .insert(users)
+    .values({
+      email: body.email,
+      username: body.username,
+      firstName: body.first_name,
+      lastName: body.last_name,
+      password: hashPassword,
+      imageUrl: body.image_url,
+    })
+    .returning({ email: users.email });
 
-  return `User has been created`
+  return `User has been created`;
 }
 
 export async function removeUser(id: string) {
   const allUsers = await getAllUsers();
-  const user = allUsers.find(user => user.id === +id)
+  const user = allUsers.find((user) => user.id === +id);
   if (!user) {
-    return `user does not exits`
+    return `user does not exits`;
   }
-  return await db.delete(users).where(eq(users.id, user.id)).returning()
+  return await db.delete(users).where(eq(users.id, user.id)).returning();
 }

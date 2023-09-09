@@ -1,8 +1,11 @@
 import { Hono } from 'hono';
 import { createUser, getAllUsers, getOneUser, removeUser } from './handlers/users';
 import { userType } from '../type';
+import { logger } from 'hono/logger';
 
 const app = new Hono();
+
+app.use('*', logger());
 
 app.get('/', (c) => c.text('Welcome to HONO!'));
 
@@ -25,9 +28,9 @@ app.post('/user', async (c) => {
 });
 
 app.delete('/user/:id', async (c) => {
-  const id = await c.req.param("id");
-  const user = await removeUser(id)
-  return c.json({ user })
-})
+  const id = c.req.param('id');
+  const user = await removeUser(id);
+  return c.json({ user });
+});
 
 export default app;
